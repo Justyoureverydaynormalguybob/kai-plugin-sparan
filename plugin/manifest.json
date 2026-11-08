@@ -1,0 +1,23 @@
+{
+  "schema": 2,
+  "apiVersion": 3,
+  "id": "community.sparan",
+  "version": "0.1.0",
+  "name": "Sparán",
+  "description": "A post-quantum Koinos wallet. Your account answers only to an ML-DSA-44 (NIST FIPS 204) key, kept encrypted by your operating system. Every send is approved by you in KAI.",
+  "entry": "index.html",
+  "runtime": "native",
+  "service": "service/index.js",
+  "permissions": [
+    "native.execute",
+    "storage.read",
+    "storage.write",
+    "network.status",
+    "network.fetch",
+    "secrets.use",
+    "desktop.external",
+    "services.provide"
+  ],
+  "provides": ["koinos.pq-wallet"],
+  "consumes": []
+}

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sparán</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="i18n.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="top">
+      <div>
+        <h1>Sparán</h1>
+        <p class="lede" data-i18n="lede">A post-quantum Koinos wallet. Your account answers only to an ML-DSA-44 key.</p>
+      </div>
+      <div class="top-right">
+        <label class="net"><span data-i18n="network">Network</span>
+          <select id="network"><option value="mainnet">Mainnet</option><option value="testnet">Testnet (Harbinger)</option></select>
+        </label>
+        <span id="pill" class="pill" role="status" aria-live="polite">—</span>
+      </div>
+    </header>
+
+    <p id="error" class="error" role="alert" hidden></p>
+    <p id="notice" class="notice" hidden></p>
+
+    <!-- No wallet yet -->
+    <section class="card" id="setup" hidden>
+      <h2 data-i18n="setupTitle">Set up your wallet</h2>
+      <p data-i18n="setupHint">The wallet is a 24-word recovery phrase. Sparán keeps it on this computer, encrypted by your operating system. Nobody else has a copy, so write the words down on paper.</p>
+      <div class="row-buttons">
+        <button id="btn-new" type="button" class="primary" data-i18n="createNew">Create a new wallet</button>
+        <button id="btn-restore" type="button" data-i18n="restore">Restore from 24 words</button>
+      </div>
+    </section>
+
+    <section class="card" id="words-card" hidden>
+      <h2 data-i18n="wordsTitle">Your recovery words</h2>
+      <p class="warn" data-i18n="wordsWarn">Write these 24 words down, in order, on paper. Anyone with them can take your KOIN. If you lose them and this computer, nobody can get it back.</p>
+      <ol id="words" class="words"></ol>
+      <div id="check" hidden>
+        <p data-i18n="checkHint">To make sure, type these three words from your list:</p>
+        <div id="check-fields" class="check-fields"></div>
+      </div>
+      <div class="row-buttons">
+        <button id="btn-written" type="button" class="primary" data-i18n="written">I've written them down</button>
+        <button id="btn-save-new" type="button" class="primary" data-i18n="saveWallet" hidden>Save the wallet</button>
+        <button id="btn-cancel-new" type="button" data-i18n="cancel">Cancel</button>
+      </div>
+    </section>
+
+    <section class="card" id="restore-card" hidden>
+      <h2 data-i18n="restoreTitle">Restore a wallet</h2>
+      <p data-i18n="restoreHint">Type or paste the 24 words, separated by spaces.</p>
+      <textarea id="restore-words" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+      <div class="row-buttons">
+        <button id="btn-restore-go" type="button" class="primary" data-i18n="restore">Restore from 24 words</button>
+        <button id="btn-restore-cancel" type="button" data-i18n="cancel">Cancel</button>
+      </div>
+    </section>
+
+    <!-- The wallet -->
+    <section class="card" id="wallet" hidden>
+      <div class="row">
+        <div class="grow">
+          <div class="label" data-i18n="address">Address</div>
+          <code id="address" class="address">—</code>
+        </div>
+        <div class="row-buttons">
+          <button id="btn-copy" type="button" data-i18n="copy">Copy</button>
+          <button id="btn-explorer-addr" type="button" data-i18n="explorer">Explorer</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div><div class="label">KOIN</div><div id="koin" class="big">—</div></div>
+        <div><div class="label" data-i18n="mana">Mana</div><div id="mana" class="big">—</div></div>
+        <button id="btn-refresh" type="button" class="small" data-i18n="refresh">Refresh</button>
+      </div>
+      <p class="hint" data-i18n="manaHint">Mana pays for transactions. It is not spent KOIN: it refills over 5 days, up to your KOIN balance.</p>
+    </section>
+
+    <section class="card" id="activate" hidden>
+      <h2 data-i18n="activateTitle">Activate post-quantum protection</h2>
+      <p data-i18n="activateHint">Until it's activated, this address is an ordinary Koinos address. Activating installs the koinos-pq contract on it and registers your ML-DSA-44 key, in one transaction. After that only that key can move its KOIN.</p>
+      <p id="activate-need" class="hint"></p>
+      <p id="activate-progress" class="progress" aria-live="polite" hidden></p>
+      <button id="btn-activate" type="button" class="primary" data-i18n="activate">Activate</button>
+    </section>
+
+    <section class="card" id="send" hidden>
+      <h2 data-i18n="sendTitle">Send KOIN</h2>
+      <label class="field"><span data-i18n="to">To</span>
+        <input id="to" type="text" spellcheck="false" autocomplete="off" placeholder="1…">
+      </label>
+      <p id="to-note" class="hint" hidden></p>
+      <label class="field" id="confirm-new-field" hidden><span data-i18n="confirmLast6">Type the last 6 characters of this new address</span>
+        <input id="confirm-new" type="text" maxlength="6" spellcheck="false" autocomplete="off">
+      </label>
+      <label class="field"><span data-i18n="amount">Amount (KOIN)</span>
+        <input id="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0">
+      </label>
+      <button id="btn-send" type="button" class="primary" data-i18n="sendBtn">Send</button>
+      <p id="send-result" class="progress" aria-live="polite" hidden></p>
+    </section>
+
+    <section class="card" id="history-card" hidden>
+      <h2 data-i18n="historyTitle">Recent activity</h2>
+      <ul id="history" class="history"></ul>
+    </section>
+
+    <section class="card" id="settings" hidden>
+      <h2 data-i18n="settingsTitle">Settings</h2>
+      <label class="check"><input id="share" type="checkbox"> <span data-i18n="share">Let other KAI plugins use this wallet</span></label>
+      <p class="hint" data-i18n="shareHint">They can see the address and balance and ask for a payment. You approve every payment yourself, in KAI.</p>
+      <div class="row-buttons">
+        <button id="btn-reveal" type="button" data-i18n="reveal">Show recovery words</button>
+        <button id="btn-remove" type="button" class="danger" data-i18n="remove">Remove wallet from this computer</button>
+      </div>
+      <p class="hint small-print" id="about"></p>
+    </section>
+  </main>
+</body>
+</html>

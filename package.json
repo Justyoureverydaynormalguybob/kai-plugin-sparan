@@ -1,0 +1,19 @@
+{
+  "name": "kai-plugin-sparan",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sparán for KAI: a post-quantum (ML-DSA-44) Koinos wallet as a KAI Core plugin",
+  "license": "MIT",
+  "scripts": {
+    "bundle": "node scripts/bundle.js",
+    "test": "node --test \"test/*.test.js\"",
+    "pack": "node scripts/pack.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "koinos-pq-core": "github:Justyoureverydaynormalguybob/koinos-pq-core#b723619"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
