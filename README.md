@@ -79,6 +79,19 @@ node scripts/pack.js --core <kai-core checkout> --key <ed25519 key outside this 
 
 The tests run the real service: a send is built by koilib, signed with ML-DSA-44 and checked against the wallet's key; activation uploads the real pqwallet bytecode and registers the key. `scripts/pack.js` rebuilds the bundle and refuses to sign if it differs from what's committed, refuses uncommitted plugin files and a key inside the repo, and never overwrites a release.
 
+## For KAI maintainers
+
+Offered for the KAI plugin catalog, entirely your call:
+
+- **List it as is**: `community.sparan` under its current publisher key (the same key as `community.mcp-bridge`).
+- **Adopt it**: re-sign it under your key with your own ID. Core binds an ID to its first publisher, so adopting means a new ID. MIT licensed.
+- **Leave it**: it works as a third-party install.
+
+Two things that would help any wallet-style plugin:
+
+1. **Funding from the Core wallet.** Moving KOIN from the Core wallet into a plugin's address today means copying the address into Wallet → Send. A reviewed Core action such as `wallet.authorize("transfer-request", { to, amount, reason })`, which opens Core's own send review prefilled and names the requesting plugin, would let a plugin offer "Fund from my KAI wallet" without ever touching the Core key.
+2. **A visible-window signal for approvals.** `desktop.confirm` returns false while KAI is in the tray, which is right; a way for a service to ask Core to bring its window forward (with the user's say-so) would make payments requested by other plugins less confusing.
+
 ## Licence
 
 MIT. Bundled third-party licences are in `plugin/service/vendor/THIRD-PARTY-LICENSES.txt`.
